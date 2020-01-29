@@ -1,11 +1,11 @@
 <?php
 /*
- * Update value of new field to $item object that will be passed to Walker_Nav_Menu_Edit_Custom
- * @use
+ * Update value of new field to $item object that will be passed to LWV_Walker_Nav_Menu_Edit
+ * @uses HOOK wp_update_nav_menu_item
  */
 
-add_action('wp_update_nav_menu_item', 'custom_nav_update',10, 3);
-function custom_nav_update($menu_id, $menu_item_db_id, $args ) {
+add_action('wp_update_nav_menu_item', 'wp_update_nav_items',10, 3);
+function wp_update_nav_items($menu_id, $menu_item_db_id, $args ) {
     if ( is_array($_REQUEST['menu-item-mega_menu']) ) {
         $custom_value = $_REQUEST['menu_item_mega_menu'][$menu_item_db_id];
         update_post_meta( $menu_item_db_id, '_menu_item_mega_menu', $custom_value );
@@ -13,21 +13,22 @@ function custom_nav_update($menu_id, $menu_item_db_id, $args ) {
 }
 
 /*
- * Adds value of new field to $item object that will be passed to Walker_Nav_Menu_Edit_Custom
+ * Adds value of new field to $item object that will be passed to LWV_Walker_Nav_Menu_Edit
+ * @uses HOOK wp_setup_nav_menu_item
  */
-add_filter( 'wp_setup_nav_menu_item','custom_nav_item' );
-function custom_nav_item($menu_item) {
+add_filter( 'wp_setup_nav_menu_item','wp_nav_item' );
+function wp_nav_item($menu_item) {
     $menu_item->mega_menu = get_post_meta( $menu_item->ID, '_menu_item_mega_menu', true );
     return $menu_item;
 }
 
 /*
- * Edit Nav Menu Walker by returning Walker_Nav_Menu_Edit_Custom
+ * Edit Nav Menu Walker by returning LWV_Walker_Nav_Menu_Edit Walker Class
  */
 
-add_filter( 'wp_edit_nav_menu_walker', 'custom_nav_edit_walker',10,2 );
-function custom_nav_edit_walker($walker,$menu_id) {
-    return 'Walker_Nav_Menu_Edit_Custom';
+add_filter( 'wp_edit_nav_menu_walker', 'wp_nav_edit_walker',10,2 );
+function wp_nav_edit_walker($walker,$menu_id) {
+    return 'LWV_Walker_Nav_Menu_Edit';
 }
 
 /**
@@ -39,7 +40,7 @@ function custom_nav_edit_walker($walker,$menu_id) {
  * @since 3.0.0
  * @uses Walker_Nav_Menu
  */
-class Walker_Nav_Menu_Edit_Custom extends Walker_Nav_Menu  {
+class LWV_Walker_Nav_Menu_Edit extends Walker_Nav_Menu  {
 	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
 	    global $_wp_nav_menu_max_depth;
 	    $_wp_nav_menu_max_depth = $depth > $_wp_nav_menu_max_depth ? $depth : $_wp_nav_menu_max_depth;
