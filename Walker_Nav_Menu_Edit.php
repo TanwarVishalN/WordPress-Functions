@@ -7,7 +7,7 @@
 add_action('wp_update_nav_menu_item', 'wp_update_nav_items',10, 3);
 function wp_update_nav_items($menu_id, $menu_item_db_id, $args ) {
     if ( is_array($_REQUEST['menu-item-mega_menu']) ) {
-        $custom_value = $_REQUEST['menu_item_mega_menu'][$menu_item_db_id];
+        $custom_value = $_REQUEST['menu-item-mega_menu'][$menu_item_db_id];
         update_post_meta( $menu_item_db_id, '_menu_item_mega_menu', $custom_value );
     }
 }
