@@ -35,7 +35,7 @@
       });
 
       frame.on('select', function() {
-          var attachments = file_frame.state().get('selection').toJSON();
+          var attachments = frame.state().get('selection').toJSON();
           console.log(attachments);
       });
 
